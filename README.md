@@ -1,6 +1,6 @@
 # Google OAuth Go Sample Project - Web application
 
-Web based version of [GoProgressQuest](https://github.com/Skarlso/goprogressquest).
+Forked from [https://github.com/Skarlso/google-oauth-go-sample](https://github.com/Skarlso/google-oauth-go-sample), removed some stuff, simplified and reorganized some of the code.
 
 # Installation
 
