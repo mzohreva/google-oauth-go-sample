@@ -12,5 +12,17 @@
     {{else}}
         <h1>Welcome to the battlefield '{{ .email }}'.</h1>
     {{end}}
+    <ul>
+      <li>Sub: {{ .user.Sub }}</li>
+      <li>Name: {{ .user.Name }}</li>
+      <li>GivenName: {{ .user.GivenName }}</li>
+      <li>FamilyName: {{ .user.FamilyName }}</li>
+      <li>Profile: {{ .user.Profile }}</li>
+      <li>Picture: {{ .user.Picture }}</li>
+      <li>Email: {{ .user.Email }}</li>
+      <li>EmailVerified: {{ .user.EmailVerified }}</li>
+      <li>Gender: {{ .user.Gender }}</li>
+    </ul>
+    <a href="/logout">Log Out</a>
   </body>
 </html>

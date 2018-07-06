@@ -50,7 +50,9 @@ func init() {
 		ClientSecret: cred.Csecret,
 		RedirectURL:  "http://127.0.0.1:9090/auth",
 		Scopes: []string{
-			"https://www.googleapis.com/auth/userinfo.email", // You have to select your own scope from here -> https://developers.google.com/identity/protocols/googlescopes#google_sign-in
+			"openid",
+			"email",
+			// "https://www.googleapis.com/auth/userinfo.email", // You have to select your own scope from here -> https://developers.google.com/identity/protocols/googlescopes#google_sign-in
 		},
 		Endpoint: google.Endpoint,
 	}
@@ -95,13 +97,14 @@ func AuthHandler(c *gin.Context) {
 		c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error marshalling response. Please try agian."})
 		return
 	}
-	session.Set("user-id", u.Email)
-	err = session.Save()
-	if err != nil {
-		log.Println(err)
-		c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving session. Please try again."})
+	// Check if email stored in session matches the email in returned JSON
+	email := session.Get("email").(string)
+	if email != u.Email {
+		log.Println("Email does not match!")
+		c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Email does not match!"})
 		return
 	}
+
 	seen := false
 	db := database.MongoDBConnection{}
 	if _, mongoErr := db.LoadUser(u.Email); mongoErr == nil {
@@ -114,22 +117,52 @@ func AuthHandler(c *gin.Context) {
 			return
 		}
 	}
-	c.HTML(http.StatusOK, "battle.tmpl", gin.H{"email": u.Email, "seen": seen})
+	session.Set("user-id", u.Email)
+	uj, err := json.Marshal(u)
+	if err != nil {
+		log.Println(err)
+		c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error marshalling user."})
+		return
+	}
+	session.Set("user", base64.StdEncoding.EncodeToString(uj))
+	session.Set("seen", seen)
+	err = session.Save()
+	if err != nil {
+		log.Println(err)
+		c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving session. Please try again."})
+		return
+	}
+	c.Redirect(http.StatusSeeOther, "/battle/field")
 }
 
 // LoginHandler handles the login procedure.
 func LoginHandler(c *gin.Context) {
 	state := RandToken(32)
+	email := c.PostForm("email")
 	session := sessions.Default(c)
 	session.Set("state", state)
+	session.Set("email", email)
 	session.Save()
 	link := getLoginURL(state)
-	c.HTML(http.StatusOK, "auth.tmpl", gin.H{"link": link})
+	c.HTML(http.StatusOK, "auth.tmpl", gin.H{"link": link, "email": email})
+}
+
+// LogoutHandler handles the logout
+func LogoutHandler(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Clear()
+	session.Save()
+	c.Redirect(http.StatusSeeOther, "/")
 }
 
 // FieldHandler is a rudementary handler for logged in users.
 func FieldHandler(c *gin.Context) {
 	session := sessions.Default(c)
-	userID := session.Get("user-id")
-	c.HTML(http.StatusOK, "field.tmpl", gin.H{"user": userID})
+	email := session.Get("user-id")
+	seen := session.Get("seen")
+	ujb64 := session.Get("user")
+	uj, _ := base64.StdEncoding.DecodeString(ujb64.(string))
+	var user structs.User
+	json.Unmarshal(uj, &user)
+	c.HTML(http.StatusOK, "battle.tmpl", gin.H{"email": email, "seen": seen, "user": user})
 }

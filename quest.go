@@ -22,8 +22,9 @@ func main() {
 	router.LoadHTMLGlob("templates/*")
 
 	router.GET("/", handlers.IndexHandler)
-	router.GET("/login", handlers.LoginHandler)
+	router.POST("/login", handlers.LoginHandler)
 	router.GET("/auth", handlers.AuthHandler)
+	router.GET("/logout", handlers.LogoutHandler)
 
 	authorized := router.Group("/battle")
 	authorized.Use(middleware.AuthorizeRequest())
