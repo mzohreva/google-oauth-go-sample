@@ -4,7 +4,7 @@ Forked from [https://github.com/Skarlso/google-oauth-go-sample](https://github.c
 
 # Installation
 
-Simply `go get github.com/Skarlso/google-oauth-go-sample`.
+Simply `go get github.com/mzohreva/google-oauth-go-sample`.
 
 # Setup
 
@@ -21,13 +21,9 @@ In order for the Google Authentication to work, you'll need developer credential
 
 To obtain these credentials, please navigate to this site and follow the procedure to setup a new project: [Google Developer Console](https://console.developers.google.com/iam-admin/projects).
 
-## Dependencies
-
-To gather all the libraries this project uses, simply execute from the root: `go get -v ./...`
-
 # Running
 
-To run it, simply build & run and navigate to http://127.0.0.1:9090/login, nothing else should be required.
+To run it, simply build & run and navigate to http://127.0.0.1:9090/, nothing else should be required.
 
 ```
 go build
