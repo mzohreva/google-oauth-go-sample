@@ -7,22 +7,20 @@
     <link rel="stylesheet" href="/css/main.css">
   </head>
   <body>
-    {{if .seen}}
-        <h1>Welcome back to the battlefield '{{ .email }}'.</h1>
-    {{else}}
-        <h1>Welcome to the battlefield '{{ .email }}'.</h1>
-    {{end}}
-    <ul>
-      <li>Sub: {{ .user.Sub }}</li>
-      <li>Name: {{ .user.Name }}</li>
-      <li>GivenName: {{ .user.GivenName }}</li>
-      <li>FamilyName: {{ .user.FamilyName }}</li>
-      <li>Profile: {{ .user.Profile }}</li>
-      <li>Picture: {{ .user.Picture }}</li>
-      <li>Email: {{ .user.Email }}</li>
-      <li>EmailVerified: {{ .user.EmailVerified }}</li>
-      <li>Gender: {{ .user.Gender }}</li>
-    </ul>
-    <a href="/logout">Log Out</a>
+    <div class="centered">
+      <h1>Welcome '{{ .email }}'</h1>
+      <ul class="left-justify">
+        <li>Sub: {{ .user.Sub }}</li>
+        <li>Name: {{ .user.Name }}</li>
+        <li>GivenName: {{ .user.GivenName }}</li>
+        <li>FamilyName: {{ .user.FamilyName }}</li>
+        <li>Profile: {{ .user.Profile }}</li>
+        <li>Picture: {{ .user.Picture }}</li>
+        <li>Email: {{ .user.Email }}</li>
+        <li>EmailVerified: {{ .user.EmailVerified }}</li>
+        <li>Gender: {{ .user.Gender }}</li>
+      </ul>
+      <a href="/logout">Log Out</a>
+    </div>
   </body>
 </html>

@@ -1,4 +1,4 @@
-package handlers
+package main
 
 import (
 	"crypto/rand"
@@ -9,8 +9,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Skarlso/google-oauth-go-sample/database"
-	"github.com/Skarlso/google-oauth-go-sample/structs"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
@@ -91,7 +89,7 @@ func AuthHandler(c *gin.Context) {
 	}
 	defer userinfo.Body.Close()
 	data, _ := ioutil.ReadAll(userinfo.Body)
-	u := structs.User{}
+	var u User
 	if err = json.Unmarshal(data, &u); err != nil {
 		log.Println(err)
 		c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error marshalling response. Please try agian."})
@@ -105,18 +103,6 @@ func AuthHandler(c *gin.Context) {
 		return
 	}
 
-	seen := false
-	db := database.MongoDBConnection{}
-	if _, mongoErr := db.LoadUser(u.Email); mongoErr == nil {
-		seen = true
-	} else {
-		err = db.SaveUser(&u)
-		if err != nil {
-			log.Println(err)
-			c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving user. Please try again."})
-			return
-		}
-	}
 	session.Set("user-id", u.Email)
 	uj, err := json.Marshal(u)
 	if err != nil {
@@ -125,7 +111,6 @@ func AuthHandler(c *gin.Context) {
 		return
 	}
 	session.Set("user", base64.StdEncoding.EncodeToString(uj))
-	session.Set("seen", seen)
 	err = session.Save()
 	if err != nil {
 		log.Println(err)
@@ -144,7 +129,7 @@ func LoginHandler(c *gin.Context) {
 	session.Set("email", email)
 	session.Save()
 	link := getLoginURL(state)
-	c.HTML(http.StatusOK, "auth.tmpl", gin.H{"link": link, "email": email})
+	c.HTML(http.StatusOK, "login.tmpl", gin.H{"link": link, "email": email})
 }
 
 // LogoutHandler handles the logout
@@ -159,10 +144,9 @@ func LogoutHandler(c *gin.Context) {
 func FieldHandler(c *gin.Context) {
 	session := sessions.Default(c)
 	email := session.Get("user-id")
-	seen := session.Get("seen")
 	ujb64 := session.Get("user")
 	uj, _ := base64.StdEncoding.DecodeString(ujb64.(string))
-	var user structs.User
+	var user User
 	json.Unmarshal(uj, &user)
-	c.HTML(http.StatusOK, "battle.tmpl", gin.H{"email": email, "seen": seen, "user": user})
+	c.HTML(http.StatusOK, "battle.tmpl", gin.H{"email": email, "user": user})
 }

@@ -7,7 +7,10 @@
     <link rel="stylesheet" href="/css/main.css">
   </head>
   <body>
-      <p class="centered">Email: {{ .email }}</p>
+    <div class="centered">
+      <h1>Choose SSO Provider</h1>
+      <p>Email: {{ .email }}</p>
       <a href="{{ .link }}"><button>Login with Google!</button></a>
+    </div>
   </body>
 </html>

@@ -1,29 +1,57 @@
 body {
     background-color: #cccccc;
+    background-image: url("../img/background.png");
 }
 
 h1 {
     text-align: center;
-    color: #222;
+    color: #111;
     text-shadow: 2px 2px #aaa;
 }
 
-button {
-    background-color: #4CAF50; /* Green */
+button, input[type="submit"] {
+    /* background-color: #493;
     border: none;
     color: white;
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
     font-size: 16px;
     border-radius: 12px;
-    position: absolute;
-    top: 45%;
-    left: 42%;
+    box-shadow: 2px 2px #bbb; */
+
+	box-shadow:inset 0px 1px 0px 0px #caefab;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #77d42a), color-stop(1, #5cb811) );
+	background:-moz-linear-gradient( center top, #77d42a 5%, #5cb811 100% );
+	background-color:#77d42a;
+	border-top-left-radius:10px;
+	border-top-right-radius:10px;
+	border-bottom-right-radius:10px;
+	border-bottom-left-radius:10px;
+	text-indent:0;
+	border:1px solid #268a16;
+	display:inline-block;
+	color:#306108;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #aade7c;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
 }
 
 .centered {
     text-align: center;
     padding-top: 200px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.left-justify{
+    text-align: left;
+}
+
+.error {
+    color: rgb(153, 0, 0);
 }
