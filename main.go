@@ -7,7 +7,7 @@ import (
 
 func main() {
 	router := gin.Default()
-	store := sessions.NewCookieStore([]byte(RandToken(64)))
+	store := sessions.NewCookieStore([]byte(randomToken(64)))
 	store.Options(sessions.Options{
 		Path:   "/",
 		MaxAge: 86400 * 7,
@@ -19,15 +19,15 @@ func main() {
 	router.Static("/img", "./static/img")
 	router.LoadHTMLGlob("templates/*")
 
-	router.GET("/", IndexHandler)
-	router.POST("/login", LoginHandler)
-	router.GET("/auth", AuthHandler)
-	router.GET("/logout", LogoutHandler)
+	router.GET("/", indexHandler)
+	router.POST("/login", loginHandler)
+	router.GET("/auth", authHandler)
+	router.GET("/logout", logoutHandler)
 
 	authorized := router.Group("/battle")
-	authorized.Use(AuthorizeRequest())
+	authorized.Use(authorizeRequest())
 	{
-		authorized.GET("/field", FieldHandler)
+		authorized.GET("/field", fieldHandler)
 	}
 
 	router.Run("127.0.0.1:9090")

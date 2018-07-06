@@ -24,9 +24,8 @@ type Credentials struct {
 	Csecret string `json:"csecret"`
 }
 
-// RandToken generates a random @l length token.
-func RandToken(l int) string {
-	b := make([]byte, l)
+func randomToken(length int) string {
+	b := make([]byte, length)
 	rand.Read(b)
 	return base64.StdEncoding.EncodeToString(b)
 }
@@ -56,13 +55,11 @@ func init() {
 	}
 }
 
-// IndexHandler handels /.
-func IndexHandler(c *gin.Context) {
+func indexHandler(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 }
 
-// AuthHandler handles authentication of a user and initiates a session.
-func AuthHandler(c *gin.Context) {
+func authHandler(c *gin.Context) {
 	// Handle the exchange code to initiate a transport.
 	session := sessions.Default(c)
 	retrievedState := session.Get("state")
@@ -120,9 +117,8 @@ func AuthHandler(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/battle/field")
 }
 
-// LoginHandler handles the login procedure.
-func LoginHandler(c *gin.Context) {
-	state := RandToken(32)
+func loginHandler(c *gin.Context) {
+	state := randomToken(32)
 	email := c.PostForm("email")
 	session := sessions.Default(c)
 	session.Set("state", state)
@@ -132,16 +128,14 @@ func LoginHandler(c *gin.Context) {
 	c.HTML(http.StatusOK, "login.tmpl", gin.H{"link": link, "email": email})
 }
 
-// LogoutHandler handles the logout
-func LogoutHandler(c *gin.Context) {
+func logoutHandler(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Clear()
 	session.Save()
 	c.Redirect(http.StatusSeeOther, "/")
 }
 
-// FieldHandler is a rudementary handler for logged in users.
-func FieldHandler(c *gin.Context) {
+func fieldHandler(c *gin.Context) {
 	session := sessions.Default(c)
 	email := session.Get("user-id")
 	ujb64 := session.Get("user")

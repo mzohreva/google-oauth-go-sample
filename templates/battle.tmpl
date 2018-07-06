@@ -14,8 +14,8 @@
         <li>Name: {{ .user.Name }}</li>
         <li>GivenName: {{ .user.GivenName }}</li>
         <li>FamilyName: {{ .user.FamilyName }}</li>
-        <li>Profile: {{ .user.Profile }}</li>
-        <li>Picture: {{ .user.Picture }}</li>
+        <li>Profile: <a href="{{ .user.Profile }}" target="_blank">{{ .user.Profile }}</a></li>
+        <li>Picture: <a href="{{ .user.Picture }}" target="_blank">{{ .user.Picture }}</a></li>
         <li>Email: {{ .user.Email }}</li>
         <li>EmailVerified: {{ .user.EmailVerified }}</li>
         <li>Gender: {{ .user.Gender }}</li>
