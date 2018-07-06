@@ -1,4 +1,4 @@
-# Google OAuth Go Sample Project - Web application
+# Google OAuth Go Sample Project - Web application
 
 Forked from [https://github.com/Skarlso/google-oauth-go-sample](https://github.com/Skarlso/google-oauth-go-sample), removed some stuff, simplified and reorganized some of the code.
 
